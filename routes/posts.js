@@ -73,7 +73,7 @@ router.put("/:id", (req, res, next) => {
 
 router.put("/:id/:commentid", (req, res, next) => {
     var content = req.body.content;
-    Comment.findOneAndUpdate({_id: req.params.id}, {"$set": {content: content}})
+    Comment.findOneAndUpdate({_id: req.params.commentid}, {"$set": {content: content}})
         .then(comment => {
             res.status(200).send(comment);
         })
@@ -109,6 +109,50 @@ router.post("/:id", (req, res, next) => {
                 }
             });
         }
+    });
+});
+
+router.delete("/:id", (req, res, next) => {
+    let tempPost;
+    Post.findById(req.params.id)
+        .then(post => {
+            return post;
+        })
+        .then(result => {
+            if (!result) {
+                return res.status(401).json({
+                    message: "Get post failed"
+                })
+            }
+            Comment.remove({_id: {$in: result.comments}}, (err, comment) => {
+                if (err)
+                    console.log(err);
+                else {
+                    Post.findByIdAndRemove(req.params.id, (err, end) => {
+                        if (err)
+                            console.log(err);
+                        else 
+                            res.status(200).send(end);
+                    });
+                }
+            });
+        })
+        .catch(err => {
+            return res.status(401).json({
+                message: "Delete post failed"
+            })
+        });
+});
+
+router.delete("/:id/:commentid", (req, res, next) => {
+    Comment.findByIdAndRemove(req.params.commentid, (err, comment) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Delete comment failed"
+            })
+        }
+        else 
+            res.status(200).json(comment);
     });
 });
 

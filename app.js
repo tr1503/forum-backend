@@ -6,6 +6,7 @@ var express = require("express"),
 
 const loginSignupRoutes = require('./routes/loginSignup');
 const postsRoutes = require('./routes/posts');
+const infoRoutes = require("./routes/info");
 
 mongoose.connect("mongodb+srv://hay55:Aq010101%45@hanlincluster-oe0wu.mongodb.net/test?w=majority", {useNewUrlParser: true});
 app.use(bodyParser.urlencoded({extended: true}));
@@ -22,6 +23,7 @@ app.all('*', function (req, res, next) {
 
 app.use("/loginSignup", loginSignupRoutes);
 app.use("/posts", postsRoutes);
+app.use("/info", infoRoutes);
 
 const port = 3000;
 app.listen(port, () => {
