@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 var CommentSchema = new Schema({
-    postid: Schema.Types.ObjectId,
     authorid: Schema.Types.ObjectId,
     content: String,
     likes: Number,

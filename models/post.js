@@ -1,13 +1,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const Comment = require("./comment");
 
 var PostSchema = new Schema({
-    authorId: Schema.Types.ObjectId,
+    authorid: Schema.Types.ObjectId,
     title: String,
     content: String,
+    likes: Number,
     timestamp: {type: Date, default: Date.now},
-    comments: [Comment],
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: "Comment"
+    }],
+    tags: [String],
     images: [String]
 });
 
