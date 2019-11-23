@@ -8,18 +8,12 @@ const loginSignupRoutes = require('./routes/loginSignup');
 const postsRoutes = require('./routes/posts');
 const infoRoutes = require("./routes/info");
 
-mongoose.connect("mongodb+srv://hay55:Aq010101%45@hanlincluster-oe0wu.mongodb.net/test?w=majority", {useNewUrlParser: true});
+mongoose.connect("mongodb+srv://hay55:Aq010101-@hanlincluster-oe0wu.mongodb.net/test?w=majority", {useNewUrlParser: true})
+        .then(() => console.log("MongoDB connected"))
+        .catch(err => console.log(err));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname,'public')));
-
-app.all('*', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,GET,DELETE,OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, X-Requested-With,Origin, X-Requested-With,Content-Type,Accept");
-    res.header("Content-Type", "application/json;charset=utf-8");
-    next();
-  });
 
 app.use("/loginSignup", loginSignupRoutes);
 app.use("/posts", postsRoutes);
