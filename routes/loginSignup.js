@@ -17,6 +17,11 @@ router.post("/signup", (req, res, next) => {
             user.save().then(result => {
                 res.status(201).json({
                     result: result
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        error: err
+                    })
                 });
             });
         })

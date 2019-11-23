@@ -8,7 +8,7 @@ const loginSignupRoutes = require('./routes/loginSignup');
 const postsRoutes = require('./routes/posts');
 const infoRoutes = require("./routes/info");
 
-mongoose.connect("mongodb+srv://hay55:Aq010101-@hanlincluster-oe0wu.mongodb.net/test?w=majority", {useNewUrlParser: true})
+mongoose.connect("mongodb+srv://hay55:Aq010101-@hanlincluster-oe0wu.mongodb.net/test?w=majority", {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => console.log("MongoDB connected"))
         .catch(err => console.log(err));
 app.use(bodyParser.urlencoded({extended: true}));
