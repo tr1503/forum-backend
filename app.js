@@ -22,7 +22,7 @@ app.all('*', function (req, res, next) {
   res.header("Content-Type", "application/json;charset=utf-8");
   next();
 });
-
+app.use(bodyParser.json());
 app.use("/loginSignup", loginSignupRoutes);
 app.use("/posts", postsRoutes);
 app.use("/info", infoRoutes);
