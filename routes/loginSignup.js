@@ -5,29 +5,20 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 router.post("/signup", (req, res, next) => {
-    bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-            const user = new User({
-                username: req.body.username,
-                password: hash,
-                postNumber: 0,
-                birth: req.body.birth,
-                description: req.body.description
-            });
-            user.save().then(result => {
-                res.status(201).json({
-                    result: result
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            });
+    const user = new User({
+        username: req.body.username,
+        password: req.body.password,
+        birth: req.body.birth,
+        description: req.body.description
+    });
+    user.save().then(result => {
+        res.status(201).json({
+            result: result
         })
         .catch(err => {
-            res.status(500).json({
-                error: err
-            })
+            console.log(err);
         });
+    });
 });
 
 router.post("/login", (req, res, next) => {
@@ -40,7 +31,7 @@ router.post("/login", (req, res, next) => {
                 });
             }
             tempUser = user;
-            return bcrypt.compare(req.body.password, user.passowrd)
+            return req.body.password === user.password;
         })
         .then(result => {
             if (!result) {
