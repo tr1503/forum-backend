@@ -15,6 +15,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname,'public')));
 
+app.all('*', function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "PUT,POST,PATCH,GET,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, X-Requested-With,Origin, X-Requested-With,Content-Type,Accept");
+  res.header("Content-Type", "application/json;charset=utf-8");
+  next();
+});
+
 app.use("/loginSignup", loginSignupRoutes);
 app.use("/posts", postsRoutes);
 app.use("/info", infoRoutes);

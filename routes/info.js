@@ -69,18 +69,40 @@ router.get("/:id/comments", (req, res, next) => {
         })
 });
 
-// get admin's information
+// get forum's total information
 router.get("/:adminid", (req, res, next) => {
-    Admin.findById(req.params.adminid)
-        .then(admin => {
-            res.status(200).send(admin);
-        })
-        .catch(err => {
-            return res.status(401).json({
-                message: "Get admin failed"
-            })
+    Post.count({}).then(count => {
+        res.status(200).send(count);
+    })
+    .catch(err => {
+        res.status(500).send({
+            error: err
         });
+    });
 });
 
+// get one user's information
+router.get("/:adminid/:username", (req, res, next) => {
+    User.findOne({username: req.params.username})
+        .then(user => {
+            if (!user) {
+                return res.status.json({
+                    message: "Can't find this user"
+                })
+            }
+            return user._id;
+        })
+        .then(result => {
+            Post.find({authorid: result})
+                .then(posts => {
+                    res.status(200).send(posts);
+                });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        })
+})
 
 module.exports = router;
