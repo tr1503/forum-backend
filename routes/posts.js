@@ -35,7 +35,7 @@ router.post("/", (req, res, next) => {
         content: req.body.content,
         likes: 0,
         timestamp: Date.now,
-        comment: [],
+        comments: [],
         tags: req.body.tags,
         images: req.body.images
     });
@@ -109,10 +109,18 @@ router.get("/:id", (req, res, next) => {
 router.post("/:id", (req, res, next) => {
     Post.findById(req.params.id, (err, post) => {
         if (err) {
-            res.redirect("/");
+            res.status(500).json({
+                error: err
+            })
         } else {
-            // frontend needs to send a comment object
-            Comment.create(req.body.comment, (err, comment) => {
+            const comment = new Comment({
+                postid: req.params.id,
+                authorid: req.body.authorid,
+                content: req.body.content,
+                likes: 0,
+                timestamp: Date.now
+            });
+            Comment.create(comment, (err, comment) => {
                 if (err)
                     console.log(err);
                 else {

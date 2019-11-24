@@ -12,7 +12,6 @@ mongoose.connect("mongodb+srv://hay55:Aq010101-@hanlincluster-oe0wu.mongodb.net/
         .then(() => console.log("MongoDB connected"))
         .catch(err => console.log(err));
 app.use(bodyParser.urlencoded({extended: true}));
-app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname,'public')));
 
 app.all('*', function (req, res, next) {
