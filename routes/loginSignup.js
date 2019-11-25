@@ -10,14 +10,17 @@ router.post("/signup", (req, res, next) => {
         birth: req.body.birth,
         description: req.body.description
     });
-    user.save().then(result => {
-        res.status(201).json({
-            result: result
+    user.save().
+        then(result => {
+            res.status(200).json({
+                result: result
+            })
         })
         .catch(err => {
-            console.log(err);
+            return res.status(401).json({
+                error: err
+            });
         });
-    });
 });
 
 router.post("/login", (req, res, next) => {
