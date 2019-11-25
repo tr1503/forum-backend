@@ -6,7 +6,7 @@ var PostSchema = new Schema({
     title: String,
     content: String,
     likes: Number,
-    timestamp: {type: Date, default: Date.now},
+    timestamp: {type: Date, default: Date.now()},
     comments: [{
         type: Schema.Types.ObjectId,
         ref: "Comment"

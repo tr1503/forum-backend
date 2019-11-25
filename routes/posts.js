@@ -34,7 +34,7 @@ router.post("/", (req, res, next) => {
         title: req.body.title,
         content: req.body.content,
         likes: 0,
-        timestamp: Date.now,
+        timestamp: Date.now(),
         comments: [],
         tags: req.body.tags,
         images: req.body.images
@@ -118,7 +118,7 @@ router.post("/:id", (req, res, next) => {
                 authorid: req.body.authorid,
                 content: req.body.content,
                 likes: 0,
-                timestamp: Date.now
+                timestamp: Date.now()
             });
             Comment.create(comment, (err, comment) => {
                 if (err)
