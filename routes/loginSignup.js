@@ -18,7 +18,7 @@ router.post("/signup", (req, res, next) => {
         })
         .catch(err => {
             return res.status(401).json({
-                error: err
+                error: "Username exists"
             });
         });
 });

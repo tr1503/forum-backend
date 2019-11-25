@@ -30,7 +30,7 @@ router.get("/:tag", (req, res, next) => {
 
 router.post("/", (req, res, next) => {
     const post = new Post({
-        authorid: req.body.authorId,
+        authorid: req.body.authorid,
         title: req.body.title,
         content: req.body.content,
         likes: 0,
@@ -41,6 +41,11 @@ router.post("/", (req, res, next) => {
     });
     post.save().then(result => {
         res.status(200).send(result);
+    })
+    .catch(err => {
+        return res.status(401).json({
+            error: err
+        });
     });
 });
 
@@ -57,7 +62,7 @@ router.get("/:id/edit", (req, res, next) => {
         });
 });
 
-router.put("/:id", (req, res, next) => {
+router.put("/:id/edit", (req, res, next) => {
     var title = req.body.title;
     var content = req.body.content;
     Post.findOneAndUpdate({_id: req.params.id}, {"$set": {title: title, content: content}}, {new: true})
@@ -69,68 +74,6 @@ router.put("/:id", (req, res, next) => {
                 message: "Update post failed"
             });
         });
-});
-
-// for the page of editing comment
-router.get("/:id/:commentid/edit", (req, res, next) => {
-    Comment.findById(req.params.commentid)
-        .then(post => {
-            res.status(200).send(comment);
-        })
-        .catch(err => {
-            return res.status(401).json({
-                message: "Get comment failed"
-            });
-        });
-});
-
-router.put("/:id/:commentid", (req, res, next) => {
-    var content = req.body.content;
-    Comment.findOneAndUpdate({_id: req.params.commentid}, {"$set": {content: content}}, {new: true})
-        .then(comment => {
-            res.status(200).send(comment);
-        })
-        .catch(err => {
-            return res.status(401).json({
-                message: "Update comment failed"
-            })
-        });
-});
-
-router.get("/:id", (req, res, next) => {
-    Post.findById(req.params.id).populate("comments").exec((err, post) => {
-        if (err)
-            console.log(err);
-        else 
-            res.status(200).send(post);
-    });
-});
-
-router.post("/:id", (req, res, next) => {
-    Post.findById(req.params.id, (err, post) => {
-        if (err) {
-            res.status(500).json({
-                error: err
-            })
-        } else {
-            const comment = new Comment({
-                postid: req.params.id,
-                authorid: req.body.authorid,
-                content: req.body.content,
-                likes: 0,
-                timestamp: Date.now()
-            });
-            Comment.create(comment, (err, comment) => {
-                if (err)
-                    console.log(err);
-                else {
-                    post.comments.push(comment);
-                    post.save();
-                    res.status(200).send(post);
-                }
-            });
-        }
-    });
 });
 
 // for adding likes in post
@@ -157,6 +100,71 @@ router.put("/:id/:commentid/like", (req, res, next) => {
                 message: "Add likes failed"
             })
         })
+});
+
+// for the page of editing comment
+router.get("/:id/:commentid/edit", (req, res, next) => {
+    Comment.findById(req.params.commentid)
+        .then(post => {
+            res.status(200).send(comment);
+        })
+        .catch(err => {
+            return res.status(401).json({
+                message: "Get comment failed"
+            });
+        });
+});
+
+router.put("/:id/:commentid/edit", (req, res, next) => {
+    var content = req.body.content;
+    Comment.findOneAndUpdate({_id: req.params.commentid}, {"$set": {content: content}}, {new: true})
+        .then(comment => {
+            res.status(200).send(comment);
+        })
+        .catch(err => {
+            return res.status(401).json({
+                message: "Update comment failed"
+            })
+        });
+});
+
+router.get("/:id", (req, res, next) => {
+    Post.findById(req.params.id).populate("comments").exec((err, post) => {
+        if (err)
+            console.log(err);
+        else 
+            res.status(200).send(post);
+    });
+});
+
+router.post("/:id/newComment", (req, res, next) => {
+    Post.findById(req.params.id, (err, post) => {
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+        } else {
+            const comment = new Comment({
+                postid: req.params.id,
+                authorid: req.body.authorid,
+                content: req.body.content,
+                likes: 0,
+                timestamp: Date.now()
+            });
+            Comment.create(comment, (err, comment) => {
+                if (err) {
+                    return res.status(401).json({
+                        error: "Save comment failed"
+                    });
+                }
+                else {
+                    post.comments.push(comment);
+                    post.save();
+                    res.status(200).send(post);
+                }
+            });
+        }
+    });
 });
 
 router.delete("/:id", (req, res, next) => {

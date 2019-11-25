@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+// const mongoose = require("mongoose");
 const Post = require("../models/post");
 const Comment = require("../models/comment");
 const User = require("../models/user");
@@ -19,10 +20,11 @@ router.get("/:id", (req, res, next) => {
         });    
 });
 
-// update personal description
+// update personal password and description
 router.post("/:id", (req, res, next) => {
     var description = req.body.description;
-    User.findByIdAndUpdate({_id: req.params.id}, {$set: {description: description}})
+    var password = req.body.password;
+    User.findByIdAndUpdate({_id: req.params.id}, {$set: {password: password, description: description}})
         .then(user => {
             res.status(200).send(user);
         })
@@ -48,12 +50,17 @@ router.get("/:id/posts", (req, res, next) => {
 
 // get user's comments
 router.get("/:id/comments", (req, res, next) => {
-    Comment.distinct("postid", {authorid: req.params.id}).select({"postid": 1, "_id": 0})
+    Comment.find({authorid: req.params.id}).select({"postid": 1, "_id": 0})
         .then(comments => {
             return comments;
         })
         .then(result => {
-            Post.find({_id: {$in: result}}, (err, posts) => {
+            posts = []
+            result.forEach(element => {
+                if (!(posts.includes(element)))
+                    posts.push(element.postid);
+            });
+            Post.find({_id: {$in: posts}}).populate("comments").exec((err, posts) => {
                 if (err) {
                     return res.status(401).json({
                         message: "Get posts failed"
