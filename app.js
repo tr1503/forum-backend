@@ -7,6 +7,8 @@ var express = require("express"),
 const loginSignupRoutes = require('./routes/loginSignup');
 const postsRoutes = require('./routes/posts');
 const infoRoutes = require("./routes/info");
+const adminPostsRoutes = require("./routes/adminPosts");
+const adminInfoRoutes = require("./routes/adminInfo");
 
 mongoose.connect("mongodb+srv://hay55:Aq010101-@hanlincluster-oe0wu.mongodb.net/forum?w=majority", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
         .then(() => console.log("MongoDB connected"))
@@ -25,6 +27,8 @@ app.use(bodyParser.json());
 app.use("/loginSignup", loginSignupRoutes);
 app.use("/posts", postsRoutes);
 app.use("/info", infoRoutes);
+app.use("/adminPosts", adminPostsRoutes);
+app.use("/adminInfo", adminInfoRoutes);
 
 const port = 3000;
 app.listen(port, () => {

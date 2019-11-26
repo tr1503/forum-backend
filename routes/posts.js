@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Post = require("../models/post");
 const Comment = require("../models/comment");
+const checkAuth = require("../middleware/check-auth");
 
 router.get("/", (req, res, next) => {
     Post.find({})
@@ -28,7 +29,7 @@ router.get("/:tag", (req, res, next) => {
         });
 });
 
-router.post("/", (req, res, next) => {
+router.post("/", checkAuth, (req, res, next) => {
     const post = new Post({
         authorid: req.body.authorid,
         title: req.body.title,
@@ -50,7 +51,7 @@ router.post("/", (req, res, next) => {
 });
 
 // for the page of editing the post
-router.get("/:id/edit", (req, res, next) => {
+router.get("/:id/edit", checkAuth, (req, res, next) => {
     Post.findById(req.params.id)
         .then(post => {
             res.status(200).send(post);
@@ -62,7 +63,7 @@ router.get("/:id/edit", (req, res, next) => {
         });
 });
 
-router.put("/:id/edit", (req, res, next) => {
+router.put("/:id/edit", checkAuth, (req, res, next) => {
     var title = req.body.title;
     var content = req.body.content;
     Post.findOneAndUpdate({_id: req.params.id}, {"$set": {title: title, content: content}}, {new: true})
@@ -77,7 +78,7 @@ router.put("/:id/edit", (req, res, next) => {
 });
 
 // for adding likes in post
-router.put("/:id/like", (req, res, next) => {
+router.put("/:id/like", checkAuth, (req, res, next) => {
     Post.findOneAndUpdate({_id: req.params.id}, {$inc: {likes: 1}}, {new: true})
         .then(post => {
             res.status(200).send(post);
@@ -90,7 +91,7 @@ router.put("/:id/like", (req, res, next) => {
 });
 
 // for adding likes in comments
-router.put("/:id/:commentid/like", (req, res, next) => {
+router.put("/:id/:commentid/like", checkAuth, (req, res, next) => {
     Comment.findByIdAndUpdate({_id: req.params.commentid}, {$inc: {likes: 1}}, {new: true})
         .then(comment => {
             res.status(200).send(comment);
@@ -103,7 +104,7 @@ router.put("/:id/:commentid/like", (req, res, next) => {
 });
 
 // for the page of editing comment
-router.get("/:id/:commentid/edit", (req, res, next) => {
+router.get("/:id/:commentid/edit", checkAuth, (req, res, next) => {
     Comment.findById(req.params.commentid)
         .then(post => {
             res.status(200).send(comment);
@@ -115,7 +116,7 @@ router.get("/:id/:commentid/edit", (req, res, next) => {
         });
 });
 
-router.put("/:id/:commentid/edit", (req, res, next) => {
+router.put("/:id/:commentid/edit", checkAuth, (req, res, next) => {
     var content = req.body.content;
     Comment.findOneAndUpdate({_id: req.params.commentid}, {"$set": {content: content}}, {new: true})
         .then(comment => {
@@ -137,7 +138,7 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
-router.post("/:id/newComment", (req, res, next) => {
+router.post("/:id/newComment", checkAuth, (req, res, next) => {
     Post.findById(req.params.id, (err, post) => {
         if (err) {
             res.status(500).json({
@@ -164,52 +165,6 @@ router.post("/:id/newComment", (req, res, next) => {
                 }
             });
         }
-    });
-});
-
-router.delete("/:id/delete", (req, res, next) => {
-    Post.findById(req.params.id)
-        .then(post => {
-            return post;
-        })
-        .then(result => {
-            if (!result) {
-                return res.status(401).json({
-                    message: "Get post failed"
-                });
-            }
-            Comment.remove({_id: {$in: result.comments}}, (err, comment) => {
-                if (err)
-                    console.log(err);
-                else {
-                    Post.findByIdAndRemove(req.params.id, (err, end) => {
-                        if (err) {
-                            res.status(500).json({
-                                error: err
-                            })
-                        }
-                        else 
-                            res.status(200).send(end);
-                    });
-                }
-            });
-        })
-        .catch(err => {
-            return res.status(401).json({
-                message: "Delete post failed"
-            })
-        });
-});
-
-router.delete("/:id/:commentid/delete", (req, res, next) => {
-    Comment.findByIdAndRemove(req.params.commentid, (err, comment) => {
-        if (err) {
-            res.status(500).json({
-                error: err
-            });
-        }
-        else 
-            res.status(200).json(comment);
     });
 });
 
