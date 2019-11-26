@@ -167,7 +167,7 @@ router.post("/:id/newComment", (req, res, next) => {
     });
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id/delete", (req, res, next) => {
     Post.findById(req.params.id)
         .then(post => {
             return post;
@@ -201,7 +201,7 @@ router.delete("/:id", (req, res, next) => {
         });
 });
 
-router.delete("/:id/:commentid", (req, res, next) => {
+router.delete("/:id/:commentid/delete", (req, res, next) => {
     Comment.findByIdAndRemove(req.params.commentid, (err, comment) => {
         if (err) {
             res.status(500).json({
