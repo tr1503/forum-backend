@@ -43,7 +43,8 @@ router.post("/login", (req, res, next) => {
             }
             const token = jwt.sign({username: tempUser.username, userId: tempUser._id, birth: tempUser.birth, description: tempUser.description}, "this_is_a_top_secret", {expiresIn: "1h"});
             res.status(200).json({
-                token: token
+                token: token,
+                expiresIn: 3600
             });
         })
         .catch(err => {
