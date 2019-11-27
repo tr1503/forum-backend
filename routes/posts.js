@@ -31,7 +31,8 @@ router.get("/:tag", (req, res, next) => {
 
 router.post("/", checkAuth, (req, res, next) => {
     const post = new Post({
-        authorid: req.body.authorid,
+        authorid: req.userData.userId,
+        author: req.userData.username,
         title: req.body.title,
         content: req.body.content,
         likes: 0,
@@ -147,7 +148,8 @@ router.post("/:id/newComment", checkAuth, (req, res, next) => {
         } else {
             const comment = new Comment({
                 postid: req.params.id,
-                authorid: req.body.authorid,
+                authorid: req.userData.userId,
+                author: req.userData.username,
                 content: req.body.content,
                 likes: 0,
                 timestamp: Date.now()

@@ -44,7 +44,8 @@ router.post("/login", (req, res, next) => {
             const token = jwt.sign({username: tempUser.username, userId: tempUser._id, birth: tempUser.birth, description: tempUser.description}, "this_is_a_top_secret", {expiresIn: "1h"});
             res.status(200).json({
                 token: token,
-                expiresIn: 3600
+                expiresIn: 3600,
+                userId: tempUser._id
             });
         })
         .catch(err => {
@@ -72,9 +73,10 @@ router.post("/adminLogin", (req, res, next) => {
                     message: "Auth failed"
                 });
             }
-            const token = jwt.sign({username: tempAdmin.username, userId: tempAdmin._id}, "this_is_a_top_secret_admin", {expiresIn: "1h"});
+            const token = jwt.sign({username: tempAdmin.username, userId: tempAdmin._id}, "this_is_a_top_secret_admin");
             res.status(200).json({
-                token: token
+                token: token,
+                adminId: tempAdmin._id
             });
         })
         .catch(err => {

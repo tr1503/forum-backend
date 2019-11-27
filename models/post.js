@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 var PostSchema = new Schema({
     authorid: Schema.Types.ObjectId,
+    author: String,
     title: String,
     content: String,
     likes: Number,
