@@ -45,7 +45,8 @@ router.post("/login", (req, res, next) => {
             res.status(200).json({
                 token: token,
                 expiresIn: 3600,
-                userId: tempUser._id
+                userId: tempUser._id,
+                isAdmin: false
             });
         })
         .catch(err => {
@@ -76,7 +77,8 @@ router.post("/adminLogin", (req, res, next) => {
             const token = jwt.sign({username: tempAdmin.username, userId: tempAdmin._id}, "this_is_a_top_secret_admin");
             res.status(200).json({
                 token: token,
-                adminId: tempAdmin._id
+                adminId: tempAdmin._id,
+                isAdmin: true
             });
         })
         .catch(err => {
