@@ -17,7 +17,16 @@ router.get("/", (req, res, next) => {
         });
 });
 
-router.get("/:tag", (req, res, next) => {
+router.get("/:id", (req, res, next) => {
+    Post.findById(req.params.id).populate("comments").exec((err, post) => {
+        if (err)
+            console.log(err);
+        else 
+            res.status(200).send(post);
+    });
+});
+
+router.get("/search/:tag", (req, res, next) => {
     Post.find({tags: req.params.tag})
         .then(posts => {
             res.status(200).send(posts);
@@ -128,15 +137,6 @@ router.put("/:id/:commentid/edit", checkAuth, (req, res, next) => {
                 message: "Update comment failed"
             })
         });
-});
-
-router.get("/:id", (req, res, next) => {
-    Post.findById(req.params.id).populate("comments").exec((err, post) => {
-        if (err)
-            console.log(err);
-        else 
-            res.status(200).send(post);
-    });
 });
 
 router.post("/:id/newComment", checkAuth, (req, res, next) => {
