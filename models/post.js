@@ -10,7 +10,7 @@ var PostSchema = new Schema({
     timestamp: {type: Date, default: Date.now()},
     comments: [{
         type: Schema.Types.ObjectId,
-        ref: "comment"
+        ref: "Comment"
     }],
     tags: [String],
     images: [String]
