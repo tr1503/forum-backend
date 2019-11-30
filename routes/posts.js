@@ -116,7 +116,7 @@ router.put("/:id/:commentid/like", checkAuth, (req, res, next) => {
 // for the page of editing comment
 router.get("/:id/:commentid/edit", checkAuth, (req, res, next) => {
     Comment.findById(req.params.commentid)
-        .then(post => {
+        .then(comment => {
             res.status(200).send(comment);
         })
         .catch(err => {
