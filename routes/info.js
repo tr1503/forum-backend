@@ -21,7 +21,7 @@ router.get("/:id", checkAuth, (req, res, next) => {
 });
 
 // update personal password and description
-router.post("/:id", checkAuth, (req, res, next) => {
+router.put("/:id", checkAuth, (req, res, next) => {
     var description = req.body.description;
     var password = req.body.password;
     User.findByIdAndUpdate({_id: req.params.id}, {$set: {password: password, description: description}})
