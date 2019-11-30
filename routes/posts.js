@@ -134,7 +134,7 @@ router.put("/:id/:commentid/edit", checkAuth, (req, res, next) => {
         })
         .catch(err => {
             return res.status(401).json({
-                message: "Update comment failed"
+                message: err
             })
         });
 });
