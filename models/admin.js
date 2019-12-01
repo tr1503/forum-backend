@@ -7,6 +7,6 @@ var AdminSchema = new Schema({
     password: {type: String, required: true}
 });
 
-UserSchema.plugin(uniqueValidator);
+AdminSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("admin", AdminSchema);

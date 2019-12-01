@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const Admin = require("../models/admin");
 
 router.post("/signup", (req, res, next) => {
     const user = new User({
@@ -58,7 +59,7 @@ router.post("/login", (req, res, next) => {
 
 router.post("/adminLogin", (req, res, next) => {
     let tempAdmin;
-    User.findOne({ username: req.body.username})
+    Admin.findOne({ username: req.body.username})
         .then(admin => {
             if (!admin) {
                 return res.status(401).json({
@@ -66,7 +67,7 @@ router.post("/adminLogin", (req, res, next) => {
                 });
             }
             tempAdmin = admin;
-            return bcrypt.compare(req.body.password, admin.passowrd)
+            return req.body.password === admin.password;
         })
         .then(result => {
             if (!result) {
