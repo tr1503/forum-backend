@@ -6,7 +6,7 @@ const Comment = require("../models/comment");
 const checkAdmin = require("../middleware/check-admin");
 
 router.delete("/:id/delete", checkAdmin, (req, res, next) => {
-    Post.findById(req.params.id)
+    Post.findById(req.body.postid)
         .then(post => {
             return post;
         })
@@ -20,7 +20,7 @@ router.delete("/:id/delete", checkAdmin, (req, res, next) => {
                 if (err)
                     console.log(err);
                 else {
-                    Post.findByIdAndRemove(req.params.id, (err, end) => {
+                    Post.findByIdAndRemove(req.body.postid, (err, end) => {
                         if (err) {
                             res.status(500).json({
                                 error: err
