@@ -1,27 +1,54 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Admin = require("../models/admin");
+const SALT_FACTOR = 10;
 
 router.post("/signup", (req, res, next) => {
-    const user = new User({
-        username: req.body.username,
-        password: req.body.password,
-        birth: req.body.birth,
-        description: req.body.description
-    });
-    user.save().
-        then(result => {
-            res.status(200).json({
-                result: result
+    bcrypt.genSalt(SALT_FACTOR).then(salt => {
+        bcrypt.hash(req.body.password, salt)
+            .then(hash => {
+                const user = new User({
+                    username: req.body.username,
+                    password: hash,
+                    birth: req.body.birth,
+                    description: req.body.description
+                });
+                user.save()
+                    .then(result => {
+                        res.status(201).send(result);
+                    })
+                    .catch(err => {
+                        res.status(500).json({
+                            message: "Username existed"
+                        });
+                    });
             })
+    })
+    .catch(err => {
+        return res.status(401).json({
+            error: err
         })
-        .catch(err => {
-            return res.status(401).json({
-                error: "Username exists"
-            });
-        });
+    });
+    // const user = new User({
+    //     username: req.body.username,
+    //     password: req.body.password,
+    //     birth: req.body.birth,
+    //     description: req.body.description
+    // });
+    // user.save().
+    //     then(result => {
+    //         res.status(200).json({
+    //             result: result
+    //         })
+    //     })
+    //     .catch(err => {
+    //         return res.status(401).json({
+    //             error: "Username exists"
+    //         });
+    //     });
 });
 
 router.post("/login", (req, res, next) => {
@@ -34,7 +61,7 @@ router.post("/login", (req, res, next) => {
                 });
             }
             tempUser = user;
-            return req.body.password === user.password;
+            return bcrypt.compare(req.body.password, user.password);
         })
         .then(result => {
             if (!result) {
