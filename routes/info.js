@@ -4,8 +4,10 @@ const router = express.Router();
 // const mongoose = require("mongoose");
 const Post = require("../models/post");
 const Comment = require("../models/comment");
+const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const checkAuth = require("../middleware/check-auth");
+const SALT_FACTOR = 10;
 
 // get user's information
 router.get("/:id", checkAuth, (req, res, next) => {
@@ -24,15 +26,50 @@ router.get("/:id", checkAuth, (req, res, next) => {
 router.put("/:id", checkAuth, (req, res, next) => {
     var description = req.body.description;
     var password = req.body.password;
-    User.findByIdAndUpdate({_id: req.params.id}, {$set: {password: password, description: description}})
+    // User.findByIdAndUpdate({_id: req.params.id}, {$set: {password: password, description: description}})
+    //     .then(user => {
+    //         res.status(200).send(user);
+    //     })
+    //     .catch(err => {
+    //         return res.status(401).json({
+    //             message: "Update information failed"
+    //         })
+    //     });
+    User.findById(req.params.id)
         .then(user => {
-            res.status(200).send(user);
+            if (user.password === password) {
+                User.findByIdAndUpdate({_id: req.params.id}, {$set: {description: description}})
+                    .then(result => {
+                        res.status(200).send(result);
+                    })
+                    .catch(err => {
+                        return res.status(401).json({
+                            error: err
+                        })
+                    });
+            }
+            else {
+                bcrypt.genSalt(SALT_FACTOR).then(salt => {
+                    bcrypt.hash(password, salt)
+                        .then(hash => {
+                            User.findByIdAndUpdate({_id: req.params.id}, {$set: {password: hash, description: description}})
+                                .then(result => {
+                                    res.status(200).send(result);
+                                })
+                                .catch(err => {
+                                    return res.status(401).json({
+                                        error: err
+                                    });
+                                });
+                        });
+                })
+            }
         })
         .catch(err => {
             return res.status(401).json({
                 message: "Update information failed"
             })
-        });
+        })
 });
 
 // get user's posts
