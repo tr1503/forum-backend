@@ -7,18 +7,6 @@ const Comment = require("../models/comment");
 const User = require("../models/user");
 const checkAdmin = require("../middleware/check-admin");
 
-// get forum's total information
-router.get("/:adminid", checkAdmin, (req, res, next) => {
-    Post.count({}).then(count => {
-        res.status(200).send(count);
-    })
-    .catch(err => {
-        res.status(500).send({
-            error: err
-        });
-    });
-});
-
 // get one user's posts
 router.get("/:adminid/:username/posts", checkAdmin, (req, res, next) => {
     Post.find({author: req.params.username})
