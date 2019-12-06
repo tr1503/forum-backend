@@ -34,11 +34,11 @@ router.get("/:adminid/:username/comments", checkAdmin, (req, res, next) => {
 });
 
 // get daily count of posts
-router.get("/:adminid/search/:timestamp", checkAdmin, (req, res, next) => {
+router.get("/:adminid/search/:timestamp", (req, res, next) => {
     var start = req.params.timestamp;
     console.log(start);
     let tempResult = 0;
-    var startTime = new Date(start * 1000);
+    var startTime = new Date(parseInt(start));
     var endTime = startTime;
     endTime.setDate(endTime.getDate() + 1);
     console.log(startTime);
@@ -52,13 +52,13 @@ router.get("/:adminid/search/:timestamp", checkAdmin, (req, res, next) => {
                         res.status(200).send(tempResult);
                     })
                     .catch(err => {
-                        return res.status(401).json({
+                        return res.status(500).json({
                             error: err
                         })
                     });
         })
         .catch(err => {
-            return res.status(401).json({
+            return res.status(500).json({
                 error: err
             });
         })
