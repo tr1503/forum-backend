@@ -34,14 +34,13 @@ router.get("/:adminid/:username/comments", checkAdmin, (req, res, next) => {
 });
 
 // get daily count of posts
-router.get("/search/:timestamp", (req, res, next) => {
+router.get("/:adminid/search/:timestamp", checkAdmin, (req, res, next) => {
     var start = req.params.timestamp;
-    var end = start + 24 * 3600;
     console.log(start);
-    console.log(end);
     let tempResult = 0;
     var startTime = new Date(start * 1000);
-    var endTime = new Date(end * 1000);
+    var endTime = startTime;
+    endTime.setDate(endTime.getDate() + 1);
     console.log(startTime);
     console.log(endTime);
     Post.count({timestamp: {"$gte": startTime, "$lt": endTime}})
