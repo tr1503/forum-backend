@@ -34,13 +34,29 @@ router.get("/:adminid/:username/comments", checkAdmin, (req, res, next) => {
 });
 
 // get daily count of posts
-router.get("/:adminid/serach/:timestamp/posts", checkAdmin, (req, res, next) => {
+router.get("/search/:timestamp", (req, res, next) => {
     var start = req.params.timestamp;
-    var end = new Date();
-    end.setDate(end.getDate() + 86400000);
-    Post.count({timestamp: {"$gte": start, "$lt": end}})
+    var end = start + 24 * 3600;
+    console.log(start);
+    console.log(end);
+    let tempResult = 0;
+    var startTime = new Date(start * 1000);
+    var endTime = new Date(end * 1000);
+    console.log(startTime);
+    console.log(endTime);
+    Post.count({timestamp: {"$gte": startTime, "$lt": endTime}})
         .then(result => {
-            res.status(200).send(result);
+            tempResult = result;
+            Comment.count({timestamp: {"$gte": startTime, "$lt": endTime}})
+                    .then(count => {
+                        tempResult = tempResult + count;
+                        res.status(200).send(tempResult);
+                    })
+                    .catch(err => {
+                        return res.status(401).json({
+                            error: err
+                        })
+                    });
         })
         .catch(err => {
             return res.status(401).json({
@@ -49,21 +65,5 @@ router.get("/:adminid/serach/:timestamp/posts", checkAdmin, (req, res, next) => 
         })
 
 }); 
-
-// get daily count of comments
-router.get("/:adminid/search/:timestamp/comments", checkAdmin, (req, res, next) => {
-    var start = req.params.timestamp;
-    var end = new Date();
-    end.setDate(end.getDate() + 86400000);
-    Comment.count({timestamp: {"$gte": start, "$lt":end}})
-            .then(result => {
-                res.status(200).send(result);
-            })
-            .catch(err => {
-                return res.status(401).json({
-                    error: err
-                });
-            });
-});
 
 module.exports = router;
