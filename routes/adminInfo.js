@@ -36,19 +36,17 @@ router.get("/:adminid/:username/comments", checkAdmin, (req, res, next) => {
 // get daily count of posts
 router.get("/:adminid/search/:timestamp", (req, res, next) => {
     var start = req.params.timestamp;
-    console.log(start);
     let tempResult = 0;
     var startTime = new Date(parseInt(start));
-    var endTime = startTime;
-    endTime.setDate(endTime.getDate() + 1);
-    console.log(startTime);
-    console.log(endTime);
+    var endTime = new Date();
+    endTime.setDate(startTime.getDate() + 1);
     Post.count({timestamp: {"$gte": startTime, "$lt": endTime}})
         .then(result => {
             tempResult = result;
             Comment.count({timestamp: {"$gte": startTime, "$lt": endTime}})
                     .then(count => {
                         tempResult = tempResult + count;
+                        console.log(tempResult);
                         res.status(200).send(tempResult);
                     })
                     .catch(err => {
