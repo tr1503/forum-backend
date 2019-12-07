@@ -44,7 +44,7 @@
 
   * Models
 
-    Using Mongoose to define data structures and to operate the MongoDB. Using mongoose-unique-validator: for preventing duplicate usernames.
+    Using Mongoose to define four models: admin, user, post and comment. The model comment will be refered by the model post. Using mongoose-unique-validator: for preventing duplicate usernames.
 
   * Views
 
@@ -63,7 +63,8 @@
 
 
 * ### Future Work
-
+  The functionality of adding likes on posts and comments is different from the traditional forum because the user can add likes to any post and comment unlimited times. In the future, the functionality of adding likes should be changed to that each user can only add one like to a post or a comment. After the user adds one like, the button of adding likes will disappear. 
+  The another future work could be the functionality of montly activeness in the information page of admins. In the future, the admin could choose to see the monthly activeness for one year in a bar chart.
 
 
 
