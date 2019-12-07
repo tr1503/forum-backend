@@ -1,5 +1,9 @@
 # Report
 
+* ### Sites
+  The frontend's Github repository is at [forum-frontend](https://github.com/Hwlhwlxyz/forum-frontend).
+  The site was built at [Forum](http://149.28.226.57/forum/).
+
 * ### Introduction
 
   Our team has 3 members, Wenlun Hu (Pitt id: ), Hanlin Ye (Pitt id: ) and  Jun Jiang (Pitt id: juj19). Our project is to develop a Forum. The forum works like a discussion board. Users who login the forum can post text and picture on the forum and they can also leave comments to other users' articles. We also create the role of administrators who have the power to delete users' articles. 
