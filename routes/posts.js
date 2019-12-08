@@ -8,6 +8,7 @@ const checkAuth = require("../middleware/check-auth");
 router.get("/", (req, res, next) => {
     Post.find({})
         .then(posts => {
+            console.log(posts)
             res.status(200).send(posts);
         })
         .catch(err => {

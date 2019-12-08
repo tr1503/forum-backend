@@ -62,7 +62,7 @@
 
 * ### Challenges
 
-
+    In order to get daily activeness of recent seven days, it is necessary to request seven times. The easiest way is to use seven fallback functions, while the code will be long and the request will be blocked. Finally, my solution is to generate an array of dates, and then request for seven days' data in the same time use angular's  observale, which is similar to promise. Thanks to the angular's two-way data binding, the template can display the data immediately when it is updated.  
 
 
 
