@@ -6,7 +6,7 @@
 
 * ### Introduction
 
-  Our team has 3 members, Wenlun Hu (Pitt id: ), Hanlin Ye (Pitt id: ) and  Jun Jiang (Pitt id: juj19). Our project is to develop a Forum. The forum works like a discussion board. Users who login the forum can post text and picture on the forum and they can also leave comments to other users' articles. We also create the role of administrators who have the power to delete users' articles. 
+  Our team has 3 members, Wenlun Hu (Pitt id: weh63), Hanlin Ye (Pitt id: ) and  Jun Jiang (Pitt id: juj19). Our project is to develop a Forum. The forum works like a discussion board. Users who login the forum can post text and picture on the forum and they can also leave comments to other users' articles. We also create the role of administrators who have the power to delete users' articles. 
 
   
 
