@@ -85,5 +85,8 @@
 
   ng2-charts https://valor-software.com/ng2-charts/
 
+  mongoose https://mongoosejs.com/docs/guide.html
+  
+
   
 
